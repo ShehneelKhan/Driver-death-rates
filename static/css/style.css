@@ -1,0 +1,12 @@
+body {
+  background: lightblue url("/static/img/bg-img2.jpg");
+  background-size: cover;
+}
+
+h1 {
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  color: White;
+  text-align: center;
+  font-size: 50px;
+  text-decoration: underline;
+}

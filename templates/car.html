@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ year }} {{ make }} {{ model }} - Car Death Rates</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>{{ year }} {{ make }} {{ model }}</h1>
+      <br />
+      <br />
+      <h2>Overall death rate</h2>
+      <div class="progress">
+        <div
+          class="progress-bar {{ overall_color }}"
+          role="progressbar"
+          style="width: {{ overall_death_rate }}%;"
+          aria-valuenow="{{ overall_death_rate }}"
+          aria-valuemin="0"
+          aria-valuemax="1"
+        ></div>
+      </div>
+      <br />
+      <h2>Multi-vehicle crash death rate</h2>
+      <div class="progress">
+        <div
+          class="progress-bar {{ multi_vehicle_color }}"
+          role="progressbar"
+          style="width: {{ multi_vehicle_death_rate }}%;"
+          aria-valuenow="{{ multi_vehicle_death_rate }}"
+          aria-valuemin="0"
+          aria-valuemax="1"
+        ></div>
+      </div>
+      <br />
+      <h2>Single-vehicle crash death rate</h2>
+      <div class="progress">
+        <div
+          class="progress-bar {{ single_vehicle_color }}"
+          role="progressbar"
+          style="width: {{ single_vehicle_death_rate }}%;"
+          aria-valuenow="{{ single_vehicle_death_rate }}"
+          aria-valuemin="0"
+          aria-valuemax="1"
+        ></div>
+      </div>
+      <br />
+      <h2>Rollover death rate</h2>
+      <div class="progress">
+        <div
+          class="progress-bar {{ rollover_color }}"
+          role="progressbar"
+          style="width: {{ rollover_death_rate }}%;"
+          aria-valuenow="{{ rollover_death_rate }}"
+          aria-valuemin="0"
+          aria-valuemax="1"
+        ></div>
+      </div>
+    </div>
+  </body>
+</html>
