@@ -1,10 +1,8 @@
 from flask import Flask, render_template
 import requests
-import json
-from urllib.parse import quote
+import numpy as np
 
 app = Flask(__name__)
-
 
 url_link = "https://www.iihs.org/api/driver-death-rates/get-view-model"
 response = requests.post(url_link)
@@ -15,19 +13,29 @@ car_data = []
 
 for i in info:
     vehicle = i['Vehicle'].replace(' ', '-')  # Replace spaces with hyphens (-)
-    model_year_span = quote(i['ModelYearSpan'])  # Encode the model year span
+    model_year_span = i['ModelYearSpan']
+    start_year_str, end_year_str = model_year_span.split('-')
+    
 
-    car = {
-        'year': int(model_year_span.split('-')[0]),
-        'make': vehicle.split('-')[0],
-        'model': '-'.join(vehicle.split('-')[1:]),
-        'overall_death_rate': float(i['OverallDeathRate']),
-        'multi_vehicle_crash_death_rate': i['MultiVehicleDeathRate'],
-        'single_vehicle_crash_death_rate': i['SingleVehicleDeathRate'],
-        'rollover_death_rate': i['RolloverDeathRate']
-    }
-    car_data.append(car)
+    if len(start_year_str) < 4:
+        start_year_str = "20" + start_year_str
+    
+    if len(end_year_str) < 4:
+        end_year_str = "20" + end_year_str
+    
+    start_year, end_year = int(start_year_str), int(end_year_str)
 
+    for year in range(start_year, end_year + 1):
+        car = {
+            'year': year,
+            'make': i['Vehicle'].split(' ')[0],
+            'model': '-'.join(i['Vehicle'].split(' ')[1:]),
+            'overall_death_rate': float(i['OverallDeathRate']),
+            'multi_vehicle_crash_death_rate': i['MultiVehicleDeathRate'],
+            'single_vehicle_crash_death_rate': i['SingleVehicleDeathRate'],
+            'rollover_death_rate': i['RolloverDeathRate']
+        }
+        car_data.append(car)
 
 
 @app.route('/')
@@ -46,15 +54,15 @@ def car_details(year, make, model):
     if car is None:
         return 'Car not found. (Kindly double check spelling or Add "-" if there are spaces)'
     
-      # Determine the color-coding for each death rate category
+    # Determine the color-coding for each death rate category
     def get_color(death_rate):
-        if death_rate == None:
+        if death_rate is None:
             pass
-        elif death_rate < 50:
+        elif death_rate < np.percentile([car['overall_death_rate'] for car in car_data], 33):
             return 'bg-success'
-        elif death_rate == 50:
+        elif death_rate < np.percentile([car['overall_death_rate'] for car in car_data], 66):
             return 'bg-warning'
-        elif death_rate > 50:
+        else:
             return 'bg-danger'
 
         
