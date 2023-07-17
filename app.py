@@ -2,7 +2,12 @@ from flask import Flask, render_template
 import requests
 import numpy as np
 
+
 app = Flask(__name__)
+
+@app.template_filter('format_percent')
+def format_percent(value):
+    return '{:.2%}'.format(value / 100)
 
 url_link = "https://web.archive.org/web/20230714005744/https://www.iihs.org/api/driver-death-rates/get-view-model"
 response = requests.get(url_link)
@@ -74,10 +79,7 @@ def car_details(year, make, model):
     multi_vehicle_color = get_color(car['multi_vehicle_crash_death_rate'], overall_death_rate_percentiles)
     single_vehicle_color = get_color(car['single_vehicle_crash_death_rate'], overall_death_rate_percentiles)
     rollover_color = get_color(car['rollover_death_rate'], overall_death_rate_percentiles)
-    print(overall_color)
-    print(multi_vehicle_color)
-    print(single_vehicle_color)
-    print(rollover_color)
+
 
     return render_template('car.html',
                            year=year,
