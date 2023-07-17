@@ -2,12 +2,7 @@ from flask import Flask, render_template
 import requests
 import numpy as np
 
-
 app = Flask(__name__)
-
-@app.template_filter('format_percent')
-def format_percent(value):
-    return '{:.2%}'.format(value / 100)
 
 url_link = "https://web.archive.org/web/20230714005744/https://www.iihs.org/api/driver-death-rates/get-view-model"
 response = requests.get(url_link)
@@ -20,14 +15,13 @@ for i in info:
     vehicle = i['Vehicle'].replace(' ', '-')  # Replace spaces with hyphens (-)
     model_year_span = i['ModelYearSpan']
     start_year_str, end_year_str = model_year_span.split('-')
-    
 
     if len(start_year_str) < 4:
         start_year_str = "20" + start_year_str
-    
+
     if len(end_year_str) < 4:
         end_year_str = "20" + end_year_str
-    
+
     start_year, end_year = int(start_year_str), int(end_year_str)
 
     for year in range(start_year, end_year + 1):
@@ -47,27 +41,33 @@ for i in info:
 def home():
     return render_template('index.html')
 
+
 @app.route('/car/<int:year>/<make>/<model>/')
 def car_details(year, make, model):
-    
     # Convert the search terms to lowercase
     make = make.lower()
     model = model.lower()
-    # Get the overall death rates for all cars
-    overall_death_rates = [car['overall_death_rate'] for car in car_data]
 
-    # Calculate the percentiles for overall death rates
-    overall_death_rate_percentiles = np.percentile(overall_death_rates, [33, 66])
-    
     # Find the car data based on year, make, and model
     car = next((c for c in car_data if c['year'] == year and c['make'].lower() == make and c['model'].lower() == model), None)
     if car is None:
         return 'Car not found. (Kindly double check spelling or Add "-" if there are spaces)'
-    
-    # Determine the color-coding for each death rate category
+
+    # Calculate the percentiles for each death rate category based on all cars
+    overall_death_rates = [car['overall_death_rate'] for car in car_data]
+    multi_vehicle_death_rates = [car['multi_vehicle_crash_death_rate'] for car in car_data]
+    single_vehicle_death_rates = [car['single_vehicle_crash_death_rate'] for car in car_data]
+    rollover_death_rates = [car['rollover_death_rate'] for car in car_data]
+
+    overall_death_rate_percentiles = np.percentile(overall_death_rates, [33, 66])
+    multi_vehicle_death_rate_percentiles = np.percentile(multi_vehicle_death_rates, [33, 66])
+    single_vehicle_death_rate_percentiles = np.percentile(single_vehicle_death_rates, [33, 66])
+    rollover_death_rate_percentiles = np.percentile(rollover_death_rates, [33, 66])
+
+    # Determine the color-coding for each death rate category based on percentiles
     def get_color(death_rate, percentiles):
         if death_rate is None:
-            pass
+            return ''
         elif death_rate < percentiles[0]:
             return 'bg-success'
         elif death_rate < percentiles[1]:
@@ -76,10 +76,9 @@ def car_details(year, make, model):
             return 'bg-danger'
 
     overall_color = get_color(car['overall_death_rate'], overall_death_rate_percentiles)
-    multi_vehicle_color = get_color(car['multi_vehicle_crash_death_rate'], overall_death_rate_percentiles)
-    single_vehicle_color = get_color(car['single_vehicle_crash_death_rate'], overall_death_rate_percentiles)
-    rollover_color = get_color(car['rollover_death_rate'], overall_death_rate_percentiles)
-
+    multi_vehicle_color = get_color(car['multi_vehicle_crash_death_rate'], multi_vehicle_death_rate_percentiles)
+    single_vehicle_color = get_color(car['single_vehicle_crash_death_rate'], single_vehicle_death_rate_percentiles)
+    rollover_color = get_color(car['rollover_death_rate'], rollover_death_rate_percentiles)
 
     return render_template('car.html',
                            year=year,
@@ -92,7 +91,11 @@ def car_details(year, make, model):
                            overall_color=overall_color,
                            multi_vehicle_color=multi_vehicle_color,
                            single_vehicle_color=single_vehicle_color,
-                           rollover_color=rollover_color)
+                           rollover_color=rollover_color,
+                           overall_percentile=car['overall_death_rate'],
+                           multi_vehicle_percentile=car['multi_vehicle_crash_death_rate'],
+                           single_vehicle_percentile=car['single_vehicle_crash_death_rate'],
+                           rollover_percentile=car['rollover_death_rate'])
 
 
 if __name__ == '__main__':
