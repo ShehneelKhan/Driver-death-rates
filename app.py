@@ -4,7 +4,7 @@ import numpy as np
 
 app = Flask(__name__)
 
-url_link = "https://www.iihs.org/api/driver-death-rates/get-view-model"
+url_link = "https://web.archive.org/web/20230714005744/https://www.iihs.org/api/driver-death-rates/get-view-model"
 response = requests.post(url_link)
 data = response.json()
 info = data["Info"]
