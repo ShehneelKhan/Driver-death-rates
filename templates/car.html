@@ -22,7 +22,7 @@
         <div
           class="progress-bar {{ overall_color }}"
           role="progressbar"
-          style="width: {{ overall_death_rate }}%;"
+          style="width: {{ overall_death_rate|format_percent }};"
           aria-valuenow="{{ overall_death_rate }}"
           aria-valuemin="0"
           aria-valuemax="100"
@@ -34,7 +34,7 @@
         <div
           class="progress-bar {{ multi_vehicle_color }}"
           role="progressbar"
-          style="width: {{ multi_vehicle_death_rate }}%;"
+          style="width: {{ multi_vehicle_death_rate|format_percent }};"
           aria-valuenow="{{ multi_vehicle_death_rate }}"
           aria-valuemin="0"
           aria-valuemax="100"
@@ -46,7 +46,7 @@
         <div
           class="progress-bar {{ single_vehicle_color }}"
           role="progressbar"
-          style="width: {{ single_vehicle_death_rate }}%;"
+          style="width: {{ single_vehicle_death_rate|format_percent }};"
           aria-valuenow="{{ single_vehicle_death_rate }}"
           aria-valuemin="0"
           aria-valuemax="100"
@@ -58,7 +58,7 @@
         <div
           class="progress-bar {{ rollover_color }}"
           role="progressbar"
-          style="width: {{ rollover_death_rate }}%;"
+          style="width: {{ rollover_death_rate|format_percent }};"
           aria-valuenow="{{ rollover_death_rate }}"
           aria-valuemin="0"
           aria-valuemax="100"
