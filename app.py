@@ -48,6 +48,11 @@ def car_details(year, make, model):
     # Convert the search terms to lowercase
     make = make.lower()
     model = model.lower()
+    # Get the overall death rates for all cars
+    overall_death_rates = [car['overall_death_rate'] for car in car_data]
+
+    # Calculate the percentiles for overall death rates
+    overall_death_rate_percentiles = np.percentile(overall_death_rates, [33, 66])
     
     # Find the car data based on year, make, and model
     car = next((c for c in car_data if c['year'] == year and c['make'].lower() == make and c['model'].lower() == model), None)
@@ -55,22 +60,24 @@ def car_details(year, make, model):
         return 'Car not found. (Kindly double check spelling or Add "-" if there are spaces)'
     
     # Determine the color-coding for each death rate category
-    def get_color(death_rate):
+    def get_color(death_rate, percentiles):
         if death_rate is None:
             pass
-        elif death_rate < np.percentile([car['overall_death_rate'] for car in car_data], 33):
+        elif death_rate < percentiles[0]:
             return 'bg-success'
-        elif death_rate < np.percentile([car['overall_death_rate'] for car in car_data], 66):
+        elif death_rate < percentiles[1]:
             return 'bg-warning'
         else:
             return 'bg-danger'
 
-        
-    overall_color = get_color(car['overall_death_rate'])
-    multi_vehicle_color = get_color(car['multi_vehicle_crash_death_rate'])
-    single_vehicle_color = get_color(car['single_vehicle_crash_death_rate'])
-    rollover_color = get_color(car['rollover_death_rate'])
-
+    overall_color = get_color(car['overall_death_rate'], overall_death_rate_percentiles)
+    multi_vehicle_color = get_color(car['multi_vehicle_crash_death_rate'], overall_death_rate_percentiles)
+    single_vehicle_color = get_color(car['single_vehicle_crash_death_rate'], overall_death_rate_percentiles)
+    rollover_color = get_color(car['rollover_death_rate'], overall_death_rate_percentiles)
+    print(overall_color)
+    print(multi_vehicle_color)
+    print(single_vehicle_color)
+    print(rollover_color)
 
     return render_template('car.html',
                            year=year,
