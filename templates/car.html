@@ -6,11 +6,6 @@
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     />
-    <style>
-      .progress-bar {
-        height: 20px;
-      }
-    </style>
   </head>
   <body>
     <div class="container">
@@ -22,11 +17,13 @@
         <div
           class="progress-bar {{ overall_color }}"
           role="progressbar"
-          style="width: {{ overall_death_rate|format_percent }};"
-          aria-valuenow="{{ overall_death_rate }}"
+          style="width: {{ overall_percentile }}%;"
+          aria-valuenow="{{ overall_percentile }}"
           aria-valuemin="0"
           aria-valuemax="100"
-        ></div>
+        >
+          {{ overall_percentile }}%
+        </div>
       </div>
       <br />
       <h2>Multi-vehicle crash death rate</h2>
@@ -34,11 +31,13 @@
         <div
           class="progress-bar {{ multi_vehicle_color }}"
           role="progressbar"
-          style="width: {{ multi_vehicle_death_rate|format_percent }};"
-          aria-valuenow="{{ multi_vehicle_death_rate }}"
+          style="width: {{ multi_vehicle_percentile }}%;"
+          aria-valuenow="{{ multi_vehicle_percentile }}"
           aria-valuemin="0"
           aria-valuemax="100"
-        ></div>
+        >
+          {{ multi_vehicle_percentile }}%
+        </div>
       </div>
       <br />
       <h2>Single-vehicle crash death rate</h2>
@@ -46,11 +45,13 @@
         <div
           class="progress-bar {{ single_vehicle_color }}"
           role="progressbar"
-          style="width: {{ single_vehicle_death_rate|format_percent }};"
-          aria-valuenow="{{ single_vehicle_death_rate }}"
+          style="width: {{ single_vehicle_percentile }}%;"
+          aria-valuenow="{{ single_vehicle_percentile }}"
           aria-valuemin="0"
           aria-valuemax="100"
-        ></div>
+        >
+          {{ single_vehicle_percentile }}%
+        </div>
       </div>
       <br />
       <h2>Rollover death rate</h2>
@@ -58,15 +59,14 @@
         <div
           class="progress-bar {{ rollover_color }}"
           role="progressbar"
-          style="width: {{ rollover_death_rate|format_percent }};"
-          aria-valuenow="{{ rollover_death_rate }}"
+          style="width: {{ rollover_percentile }}%;"
+          aria-valuenow="{{ rollover_percentile }}"
           aria-valuemin="0"
           aria-valuemax="100"
-        ></div>
+        >
+          {{ rollover_percentile }}%
+        </div>
       </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   </body>
 </html>
