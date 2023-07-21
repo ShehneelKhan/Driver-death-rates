@@ -1,63 +1,68 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{ year }} {{ make }} {{ model }} - Car Death Rates</title>
+    <title>{{ car.year }} {{ car.make }} {{ car.model }} Death Rates</title>
     <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     />
   </head>
   <body>
     <div class="container">
-      <h1>{{ year }} {{ make }} {{ model }}</h1>
+      <h1>{{ car.year }} {{ car.make }} {{ car.model }} Death Rates</h1>
       <br />
       <br />
       <h2>Overall death rate</h2>
       <div class="progress">
         <div
-          class="progress-bar {{ overall_color }}"
+          class="progress-bar {{ get_color_class(car.overall_death_rate, overall_percentile, min_overall, max_overall) }}"
           role="progressbar"
-          style="width: {{ overall_death_rate }}%;"
-          aria-valuenow="{{ overall_death_rate }}"
+          style="width: {{ ((car.overall_death_rate - min_overall) / (max_overall - min_overall)) * 100 if (max_overall - min_overall) else 0 }}%;"
+          aria-valuenow="{{ car.overall_death_rate }}"
           aria-valuemin="0"
-          aria-valuemax="1"
-        ></div>
+          aria-valuemax="100"
+        >
+          {{ car.overall_death_rate }}
+        </div>
       </div>
-      <br />
       <h2>Multi-vehicle crash death rate</h2>
       <div class="progress">
         <div
-          class="progress-bar {{ multi_vehicle_color }}"
+          class="progress-bar {{ get_color_class(car.multi_vehicle_crash_death_rate, multi_percentile, min_multi,  max_multi) }}"
           role="progressbar"
-          style="width: {{ multi_vehicle_death_rate }}%;"
-          aria-valuenow="{{ multi_vehicle_death_rate }}"
+          style="width: {{ ((car.multi_vehicle_crash_death_rate - min_multi) / (max_multi - min_multi)) * 100 if (max_multi - min_multi) else 0 }}%;"
+          aria-valuenow="{{ car.multi_vehicle_crash_death_rate }}"
           aria-valuemin="0"
-          aria-valuemax="1"
-        ></div>
+          aria-valuemax="100"
+        >
+          {{ car.multi_vehicle_crash_death_rate }}
+        </div>
       </div>
-      <br />
       <h2>Single-vehicle crash death rate</h2>
       <div class="progress">
         <div
-          class="progress-bar {{ single_vehicle_color }}"
+          class="progress-bar {{ get_color_class(car.single_vehicle_crash_death_rate, single_percentile, min_single, max_single) }}"
           role="progressbar"
-          style="width: {{ single_vehicle_death_rate }}%;"
-          aria-valuenow="{{ single_vehicle_death_rate }}"
+          style="width: {{ ((car.single_vehicle_crash_death_rate - min_single) / (max_single - min_single)) * 100 if (max_single - min_single) else 0 }}%;"
+          aria-valuenow="{{ car.single_vehicle_crash_death_rate }}"
           aria-valuemin="0"
-          aria-valuemax="1"
-        ></div>
+          aria-valuemax="100"
+        >
+          {{ car.single_vehicle_crash_death_rate }}
+        </div>
       </div>
-      <br />
       <h2>Rollover death rate</h2>
       <div class="progress">
         <div
-          class="progress-bar {{ rollover_color }}"
+          class="progress-bar {{ get_color_class(car.rollover_death_rate, rollover_percentile, min_rollover, max_rollover) }}"
           role="progressbar"
-          style="width: {{ rollover_death_rate }}%;"
-          aria-valuenow="{{ rollover_death_rate }}"
+          style="width: {{ ((car.rollover_death_rate - min_rollover) / (max_rollover - min_rollover)) * 100 if (max_rollover - min_rollover) else 0 }}%;"
+          aria-valuenow="{{ car.rollover_death_rate }}"
           aria-valuemin="0"
-          aria-valuemax="1"
-        ></div>
+          aria-valuemax="100"
+        >
+          {{ car.rollover_death_rate }}
+        </div>
       </div>
     </div>
   </body>
